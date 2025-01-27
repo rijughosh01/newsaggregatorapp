@@ -1,17 +1,22 @@
-// src/utils/firebase.js
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+// src/firebaseConfig.js
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDRn7A6fo9MK0UdctpusQ0iDLVY7GCLULI",
-    authDomain: "news-aggregator-d4c9a.firebaseapp.com",
-    projectId: "news-aggregator-d4c9a",
-    storageBucket: "news-aggregator-d4c9a.firebasestorage.app",
-    messagingSenderId: "540678123706",
-    appId: "1:540678123706:web:60aac6896b0e67b78f9283",
-    measurementId: "G-6BX46GM9D4"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const firestore = getFirestore(app);
 
-export const auth = getAuth(app);
+export { app, analytics, auth, firestore };
