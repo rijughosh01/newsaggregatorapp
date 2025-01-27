@@ -1,32 +1,26 @@
 // src/components/NewsList.js
-import React, { useEffect, useState } from "react";
-import getNews from "../utils/api";
-import NewsCard from "./NewsCard";
+import React, { useState, useEffect } from 'react';
 
 const NewsList = ({ category, searchQuery }) => {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [news, setNews] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchNews = async () => {
-      setLoading(true);
-      setError(null);
       try {
-        const newsArticles = await getNews(category, searchQuery);
-        setArticles(newsArticles);
-      } catch (err) {
-        setError("Failed to fetch news");
-      } finally {
-        setLoading(false);
+        const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&q=${searchQuery}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch news');
+        }
+        const data = await response.json();
+        setNews(data.articles);
+      } catch (error) {
+        setError(error.message);
       }
     };
+
     fetchNews();
   }, [category, searchQuery]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
   if (error) {
     return <p>{error}</p>;
@@ -34,8 +28,11 @@ const NewsList = ({ category, searchQuery }) => {
 
   return (
     <div className="news-list">
-      {articles.map((article, index) => (
-        <NewsCard key={index} article={article} />
+      {news.map((article, index) => (
+        <div key={index} className="news-card">
+          <h3>{article.title}</h3>
+          <p>{article.description}</p>
+        </div>
       ))}
     </div>
   );
