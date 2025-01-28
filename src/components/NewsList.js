@@ -1,4 +1,3 @@
-// src/components/NewsList.js
 import React, { useState, useEffect } from 'react';
 
 const NewsList = ({ category, searchQuery }) => {
@@ -8,13 +7,19 @@ const NewsList = ({ category, searchQuery }) => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
+        console.log('Fetching news for category:', category, 'with search query:', searchQuery);
         const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&q=${searchQuery}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}`);
+        console.log('API request URL:', response.url);
+        console.log('API request status:', response.status);
+        console.log('API request status text:', response.statusText);
         if (!response.ok) {
-          throw new Error('Failed to fetch news');
+          throw new Error(`Failed to fetch news: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
+        console.log('Fetched news data:', data);
         setNews(data.articles);
       } catch (error) {
+        console.error('Fetch error:', error);
         setError(error.message);
       }
     };
