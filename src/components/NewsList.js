@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const NewsList = ({ category, searchQuery }) => {
   const [news, setNews] = useState([]);
@@ -6,20 +6,25 @@ const NewsList = ({ category, searchQuery }) => {
 
   useEffect(() => {
     const fetchNews = async () => {
+      const apiKey = process.env.REACT_APP_NEWS_API_KEY;
+      const apiUrl = `https://newsapi.org/v2/top-headlines?category=${category}&q=${searchQuery}&apiKey=${apiKey}`;
+
       try {
-        console.log('Fetching news for category:', category, 'with search query:', searchQuery);
-        const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&q=${searchQuery}&apiKey=${process.env.REACT_APP_NEWS_API_KEY}`);
-        console.log('API request URL:', response.url);
-        console.log('API request status:', response.status);
-        console.log('API request status text:', response.statusText);
+        console.log(
+          "Fetching news from NewsAPI.org for category:",
+          category,
+          "with search query:",
+          searchQuery
+        );
+        const response = await fetch(apiUrl);
         if (!response.ok) {
-          throw new Error(`Failed to fetch news: ${response.status} ${response.statusText}`);
+          throw new Error("Failed to fetch news");
         }
         const data = await response.json();
-        console.log('Fetched news data:', data);
+        console.log("Fetched news data:", data);
         setNews(data.articles);
       } catch (error) {
-        console.error('Fetch error:', error);
+        console.error("Fetch error:", error);
         setError(error.message);
       }
     };
@@ -37,6 +42,9 @@ const NewsList = ({ category, searchQuery }) => {
         <div key={index} className="news-card">
           <h3>{article.title}</h3>
           <p>{article.description}</p>
+          <a href={article.url} target="_blank" rel="noopener noreferrer">
+            Read more
+          </a>
         </div>
       ))}
     </div>

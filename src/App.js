@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import NewsList from "./components/NewsList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
